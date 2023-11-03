@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en-us">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, minimum-scale=1, maximum-scale=1">
+        <title>{{{ TITLE }}}</title>
+
+        <!-- Load custom style sheet -->
+        <link rel="stylesheet" type="text/css" href="theme/love.css">
+    </head>
+    <body>
+        <div id="container">
+            <!-- <h1> {{{ TITLE }}} </h1> -->
+            <canvas id="loadingCanvas" oncontextmenu="event.preventDefault()" width="960" height="540"></canvas>
+            <canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+            <div id="footer">
+                <div id="hint">Powered by <a href="https://github.com/love2d/love">LÖVE</a></div>
+                <div id="fullscreen-button" onclick="goFullScreen();">Fullscreen</div>
+            </div>
+        </div>
+
+        <script type='text/javascript'>
+            function goFullScreen() {
+                var canvas = document.getElementById("canvas");
+                if(canvas.requestFullScreen)
+                    canvas.requestFullScreen();
+                else if(canvas.webkitRequestFullScreen)
+                    canvas.webkitRequestFullScreen();
+                else if(canvas.mozRequestFullScreen)
+                    canvas.mozRequestFullScreen();
+            }
+
+            function FullScreenHook() {
+                var canvas = document.getElementById("canvas");
+                canvas.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+                canvas.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+            }
+
+            var loadingContext = document.getElementById('loadingCanvas').getContext('2d');
+            var complete = false;
+
+            function drawLoadingStatus(text, current, total) {
+                var canvas = loadingContext.canvas;
+
+                var ratio = complete ? 1 : 0;
+                if (current && total) {
+                    ratio = current / total;
+                }
+                if (ratio == 1){
+                    complete = true;
+                }
+
+                //
+                loadingContext.fillStyle = "#1a1a1a";
+                loadingContext.fillRect(2, 2, canvas.scrollWidth-4, canvas.scrollHeight-4);
+
+                loadingContext.font = '1.2em arial';
+                loadingContext.textAlign = 'center'
+                //
+                loadingContext.fillStyle = "#d8cca8";
+                loadingContext.fillText(text, canvas.scrollWidth / 2, canvas.scrollHeight / 2 - 40);
+                loadingContext.fillText("LÖVE", canvas.scrollWidth / 2, canvas.scrollHeight / 2 + 60);
+                //
+                loadingContext.beginPath();
+                loadingContext.strokeStyle = "#d8cca8";
+                loadingContext.rect(canvas.scrollWidth / 2 - 200, canvas.scrollHeight / 2 - 10, 400, 20);
+                loadingContext.stroke();
+                loadingContext.beginPath();
+                loadingContext.rect(canvas.scrollWidth / 2 - 200, canvas.scrollHeight / 2 - 10, 400 * ratio, 20);
+                loadingContext.fill();
+            }
+
+            function drawErrorStatus(text) {
+                var canvas = loadingContext.canvas;
+                loadingContext.fillStyle = "#1a1a1a";
+                loadingContext.fillRect(2, 2, canvas.scrollWidth-4, canvas.scrollHeight-4);
+                loadingContext.font = '1.2em arial';
+                loadingContext.fillStyle = "#d8cca8";
+                loadingContext.fillText(text, canvas.scrollWidth / 2, canvas.scrollHeight / 2 - 40);
+                loadingContext.fill();
+            }
+
+            window.onload = function () { window.focus(); };
+            window.onclick = function () { window.focus(); };
+
+            window.addEventListener("keydown", function(e) {
+                // space and arrow keys
+                if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+                    e.preventDefault();
+                }
+            }, false);
+        </script>
+        <script type="text/javascript" src="game.js"></script>
+        <script async type="text/javascript" src="love.js" onload="applicationLoad(this)"></script>
+    </body>
+</html>

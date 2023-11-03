@@ -1,2 +1,68 @@
-# love-web-builder
-Builder for LÖVE (v12.0) games targeting the HTML5/WebAssembly platform.
+LÖVE HTML5/Web Assembly
+============
+
+[(Russian README)](readme_RU.md)
+
+Emscripten port of LÖVE framework version 12.0 for distribution your games on the web.
+- https://github.com/love2d/love/tree/12.0-development
+
+Forked from love.js:
+- https://github.com/Davidobot/love.js
+- https://github.com/TannerRogalsky/love.js
+
+## Getting Started
+
+Instructions for Windows users: install [Python 3.10.6 or higher](https://www.python.org/downloads/release/python-3106/). (When installing Python, make sure 'Add Python to PATH' is checked.)
+
+## To Build Your Project:
+Drag and drop the game folder or .love package onto the `build.bat` file.
+
+Or run build.bat with arguments:
+```
+build.bat <input> <output>
+```
+
+Options:
+```
+<input>         the folder with your project or the `.love` file.
+<output>        (optional) the folder to save the compiled project (default folder is 'game').
+-h, --help      display usage information.
+-n, --name      <string> game title.
+-m, --memory    [bytes] the amount of memory your game will need (default is 16777216 bytes).
+-t, --template  <string> html template name in the 'lovejs_source' folder.
+```
+
+Once the process is complete, it will display 'Done!'
+
+## Running
+1. In the <output> folder, start a web server using the command ```python -m http.server 8080```.
+2. Open ```localhost:8080``` in any web browser.
+
+## Notes
+1. The Joystick module is completely disabled in the current version. Avoid using this module in your project, as it will lead to errors.
+2. OpenGL ES 3 shaders are supported.
+3. Also check out the notes here: https://github.com/Davidobot/love.js
+
+## Building LÖVE from Source
+
+If you want to make changes to the LÖVE source code, follow the instructions below:
+
+### Windows
+
+Make sure you have CMake and Make installed.
+Clone and install [emsdk](https://github.com/emscripten-core/emsdk)
+```
+git clone https://github.com/emscripten-core/emsdk
+
+emsdk install 3.1.47
+emsdk activate 3.1.47
+```
+
+Modify the paths to emsdk in the build_lovejs.bat file to the correct ones.
+
+Clone the LÖVE HTML5/Web Assembly source code.
+
+```
+Coming soon.
+```
+
