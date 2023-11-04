@@ -60,9 +60,14 @@ emsdk activate 3.1.47
 
 Modify the paths to emsdk in the build_lovejs.bat file to the correct ones.
 
-Clone the LÖVE HTML5/Web Assembly source code.
+Clone the [megasource-web](https://github.com/rozenmad/megasource-web) and [love-web](https://github.com/rozenmad/love-web) source code:
 
 ```
-Coming soon.
+git clone https://github.com/rozenmad/megasource-web
+cd megasource-web
+git clone https://github.com/rozenmad/love-web libs/love
 ```
 
+Change the paths to emsdk and to the megasource directory in the `build_lovejs.bat` file to the correct ones.
+
+When the process is complete, the `love.js` and `love.wasm` files in the `lovejs_source\compat` directory will be replaced.
