@@ -10,19 +10,27 @@
         <link rel="stylesheet" type="text/css" href="theme/love.css">
     </head>
     <body>
-        <div id="container">
-            <!-- <h1> {{{ TITLE }}} </h1> -->
-            <canvas id="loadingCanvas" oncontextmenu="event.preventDefault()" width="960" height="540"></canvas>
+        <div id="container" class="love-desktop">
             <canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+            <div id='message-container'>
+                <div id='message'>Message</div>
+                <div id='progress-border'><div id='progress-bar'></div></div>
+            </div>
             <div id="footer">
-                <div id="hint">Powered by <a href="https://github.com/love2d/love">LÖVE</a></div>
+                <div id="logo">Powered by <a href="https://github.com/love2d/love">LÖVE</a></div>
                 <div id="fullscreen-button" onclick="goFullScreen();">Fullscreen</div>
             </div>
         </div>
 
         <script type='text/javascript'>
+            var container = document.querySelector("#container");
+            var canvas = document.querySelector("#canvas");
+            var footer = document.querySelector("#footer");
+            var progress_bar = document.querySelector("#progress-bar");
+
+            var complete = false;
+
             function goFullScreen() {
-                var canvas = document.getElementById("canvas");
                 if(canvas.requestFullScreen)
                     canvas.requestFullScreen();
                 else if(canvas.webkitRequestFullScreen)
@@ -31,58 +39,44 @@
                     canvas.mozRequestFullScreen();
             }
 
-            function FullScreenHook() {
-                var canvas = document.getElementById("canvas");
-                canvas.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-                canvas.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+            // function FullScreenHook() {
+            //     var canvas = document.getElementById("canvas");
+            //     canvas.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+            //     canvas.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+            // }
+
+            function drawMessage(text) {
+                message.innerHTML = text;
             }
 
-            var loadingContext = document.getElementById('loadingCanvas').getContext('2d');
-            var complete = false;
-
-            function drawLoadingStatus(text, current, total) {
-                var canvas = loadingContext.canvas;
-
+            function drawLoadingStatus(text, current_value, total_value) {
                 var ratio = complete ? 1 : 0;
-                if (current && total) {
-                    ratio = current / total;
+                if (current_value && total_value) {
+                    ratio = current_value / total_value;
                 }
-                if (ratio == 1){
+                if (ratio >= 1) {
                     complete = true;
                 }
 
-                //
-                loadingContext.fillStyle = "#1a1a1a";
-                loadingContext.fillRect(2, 2, canvas.scrollWidth-4, canvas.scrollHeight-4);
-
-                loadingContext.font = '1.2em arial';
-                loadingContext.textAlign = 'center'
-                //
-                loadingContext.fillStyle = "#d8cca8";
-                loadingContext.fillText(text, canvas.scrollWidth / 2, canvas.scrollHeight / 2 - 40);
-                loadingContext.fillText("LÖVE", canvas.scrollWidth / 2, canvas.scrollHeight / 2 + 60);
-                //
-                loadingContext.beginPath();
-                loadingContext.strokeStyle = "#d8cca8";
-                loadingContext.rect(canvas.scrollWidth / 2 - 200, canvas.scrollHeight / 2 - 10, 400, 20);
-                loadingContext.stroke();
-                loadingContext.beginPath();
-                loadingContext.rect(canvas.scrollWidth / 2 - 200, canvas.scrollHeight / 2 - 10, 400 * ratio, 20);
-                loadingContext.fill();
+                progress_bar.style.width = (ratio * 100) + '%';
+                drawMessage(text);
             }
 
-            function drawErrorStatus(text) {
-                var canvas = loadingContext.canvas;
-                loadingContext.fillStyle = "#1a1a1a";
-                loadingContext.fillRect(2, 2, canvas.scrollWidth-4, canvas.scrollHeight-4);
-                loadingContext.font = '1.2em arial';
-                loadingContext.fillStyle = "#d8cca8";
-                loadingContext.fillText(text, canvas.scrollWidth / 2, canvas.scrollHeight / 2 - 40);
-                loadingContext.fill();
-            }
+            window.onload = function () { 
+                window.focus();
+            };
+            window.onclick = function () { 
+                window.focus();
+            };
 
-            window.onload = function () { window.focus(); };
-            window.onclick = function () { window.focus(); };
+            window.onerror = function(event) {
+                canvas.remove();
+                // TODO: do not warn on ok events like simulating an infinite loop or exitStatus
+                drawMessage('An error has occurred, see JavaScript console');
+                Module.setStatus = function(text) {
+                    if (text) Module.printErr('[post-exception status] ' + text);
+                };
+            };
 
             window.addEventListener("keydown", function(e) {
                 // space and arrow keys
@@ -90,6 +84,54 @@
                     e.preventDefault();
                 }
             }, false);
+
+            if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+                footer.className = "love-mobile";
+                container.className = "love-mobile";
+
+                function resize_canvas() {
+                    var innerWidth = window.innerWidth;
+		            var innerHeight = window.innerHeight;
+
+                    var width = canvas.width;
+                    var height = canvas.height;
+                    var targetRatio = width / height;
+                    var actualRatio = innerWidth / innerHeight;
+
+                    var margin_left = "0px";
+                    var margin_top = "0px";
+                
+                    if (innerWidth < width || innerHeight < height) {
+                        if (actualRatio > targetRatio) {
+                            width = innerHeight * targetRatio;
+                            height = innerHeight;
+                            margin_left = ((innerWidth - width) / 2) + "px";
+                        }
+                        else {
+                            width = innerWidth;
+                            height = innerWidth / targetRatio;
+                            margin_top = ((innerHeight - height) / 2) + "px";
+                        }
+                    }
+                    else {
+                        margin_left = ((innerWidth - width) / 2) + "px";
+                        margin_top = ((innerHeight - height) / 2) + "px";
+                    }
+
+                    canvas.style.width = width + "px";
+                    canvas.style.height = height + "px";
+
+                    container.style.width = width + "px";
+		            container.style.height = height + "px";
+                    container.style.marginLeft = margin_left;
+                    container.style.marginTop = margin_top;
+                }
+
+                resize_canvas();
+                window.addEventListener('resize', resize_canvas, false);
+                window.addEventListener('orientationchange', resize_canvas, false);
+                window.addEventListener('focus', resize_canvas, false);
+            }
         </script>
         <script type="text/javascript" src="game.js"></script>
         <script async type="text/javascript" src="love.js" onload="applicationLoad(this)"></script>

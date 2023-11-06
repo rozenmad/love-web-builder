@@ -1,70 +1,85 @@
-* {
-    box-sizing: border-box;
-}
-
-h1 {
-    font-family: Quicksand, sans-serif;
-    text-align: center;
-    color: #fefefe;
-}
+* { box-sizing: border-box; }
 
 body {
-    /* background-image: url(bg.png);
-    background-repeat: no-repeat; */
-    font-family: arial;
     margin: 0;
     padding: 0;
-    background-color: #1a1a1a;
-    color: #d8cca8;
+   	font-family: arial;
+    color: #ea316e;
+  	background-color: #ffffff;
 }
 
 a {
     text-decoration: none;
-    color: #d8cca8;
+    color: #ea316e;
 }
-a:link, a:visited {
-    text-align: center;
-    color: #d8cca8;
+a:link, a:visited, a:active {
+    color: #ea316e;
 }
 
-a:hover, a:active {
-    color: #fefefe;
+a:hover {
+	color: #25aae1;
+}
+          
+#container.love-desktop {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+#container.love-mobile {
+    position: fixed;
+    width: 100%;
+    height: 100%;
 }
 
 #canvas {
-    padding-right: 0;
-    display: block;
     border: 0px none;
-    visibility: hidden;
+    display: block;
+    background-color: #f8f8f8;
 }
 
-#container { 
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    position: absolute;
-    margin: 100;
+/* .love-mobile #canvas { 
+    width: 100%;
+    height: 100%;
+} */
+
+#message-container {
+    width: 100%;
+	text-align:center;
+}
+
+#progress-border {
+  	border: 1px solid #ea316e;
+}
+  
+#progress-bar {
+	background-color: #ea316e;
+  	width: 10%;
+   	height: 16px;
+}
+
+#message-container > div {
+  	background-color:transparent;
 }
 
 #footer {
-    margin: 10px 0px;
-    padding: 0px 0px;
-    border-top: 1px solid #d8cca8;
-    width: 100%;
+	width:100%;
+    position: relative;
 }
 
 #footer > #fullscreen-button {
-    background-color: #ffffff00;
-    border: 1px solid #d8cca8;
+    background-color: transparent;
+    border: 1px solid #ea316e;
     padding: 5px 32px;
     font-size: 16px;
-    margin: 4px 2px;
+    margin: 4px 0;
     cursor: pointer;
-    float: right;
+  	float: right;
 }
 
-#footer > #hint {
+#footer > #logo {
     float: left;
     font-size: 16px;
-    margin: 4px 2px;
+    margin: 4px 0;
 }

@@ -18,16 +18,23 @@ var Module = {
         if (text) {
             drawLoadingStatus(text, soFar, total);
         } else if (Module.remainingDependencies === 0) {
-            document.getElementById('loadingCanvas').style.display = 'none';
-            document.getElementById('canvas').style.visibility = 'visible';
+            var canvas = document.getElementById('canvas');
+            document.getElementById('message-container').style.display = 'none';
+            //document.getElementById('progress-border').remove();
+            canvas.style.display = 'block';
+        }
+
+        if (typeof resize_canvas === "function") {
+            resize_canvas();
         }
     },
     setExceptionMessage: function(exception_message) {
         console.log(exception_message);
         alert('An error has occurred:\n' + exception_message + '\n\nSee JavaScript console.')
+
         document.getElementById('canvas').remove();
         
-        drawErrorStatus('An error has occurred, see JavaScript console');
+        drawMessage('An error has occurred, see JavaScript console');
         Module.setStatus = function(text) {
             if (text) Module.printErr('[post-exception status] ' + text);
         };
@@ -42,15 +49,6 @@ var Module = {
 };
 
 Module.setStatus('Downloading...');
-
-window.onerror = function(event) {
-    document.getElementById('canvas').remove();
-    // TODO: do not warn on ok events like simulating an infinite loop or exitStatus
-    drawErrorStatus('An error has occurred, see JavaScript console');
-    Module.setStatus = function(text) {
-        if (text) Module.printErr('[post-exception status] ' + text);
-    };
-};
 
 var applicationLoad = function(e) {
     Love(Module);
@@ -76,6 +74,7 @@ Module.expectedDataFileDownloads++;
         } else {
             throw 'using preloaded data can only be done on a web page or in a web worker';
         }
+
         var PACKAGE_NAME = 'game.data';
         var REMOTE_PACKAGE_BASE = 'game.data';
         if (typeof Module['locateFilePackage'] === 'function' && !Module['locateFile']) {
@@ -118,7 +117,7 @@ Module.expectedDataFileDownloads++;
                         num++;
                     }
                     total = Math.ceil(total * Module.expectedDataFileDownloads / num);
-                    if (Module['setStatus']) Module['setStatus']('Downloading data... (' + loaded + '/' + total + ')');
+                    if (Module['setStatus']) Module['setStatus']('Downloading data... (' + loaded + '/' + total + ')', loaded, total);
                 } else if (!Module.dataFileDownloads) {
                     if (Module['setStatus']) Module['setStatus']('Downloading data...');
                 }
@@ -288,8 +287,8 @@ Module.expectedDataFileDownloads++;
                     DataRequest.prototype.requests[files[i].filename].onload();
                 }
                 Module['removeRunDependency']('datafile_game.data');
-
             };
+            
             Module['addRunDependency']('datafile_game.data');
 
             if (!Module.preloadResults) Module.preloadResults = {};
@@ -327,16 +326,16 @@ Module.expectedDataFileDownloads++;
                 }, preloadFallback);
 
             if (Module['setStatus']) Module['setStatus']('Downloading...');
-
         }
+
         if (Module['calledRun']) {
             runWithFS();
         } else {
             if (!Module['preRun']) Module['preRun'] = [];
             Module["preRun"].push(runWithFS); // FS is not initialized yet, wait for it
         }
-
     }
+
     loadPackage({{{ PACKAGE }}});
 
 })();
