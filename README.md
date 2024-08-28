@@ -4,7 +4,7 @@ LÖVE HTML5/Web Assembly
 [(Russian README)](readme_RU.md)
 
 Emscripten port of LÖVE framework version 12.0 for distribution your games on the web.
-- https://github.com/love2d/love/tree/12.0-development
+- https://github.com/love2d/love/tree/main
 
 Forked from love.js:
 - https://github.com/Davidobot/love.js
@@ -53,6 +53,7 @@ Make sure you have CMake and Make installed.
 Clone and install [emsdk](https://github.com/emscripten-core/emsdk)
 ```
 git clone https://github.com/emscripten-core/emsdk
+cd emsdk
 
 emsdk install 3.1.47
 emsdk activate 3.1.47

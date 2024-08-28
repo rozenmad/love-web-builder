@@ -4,7 +4,7 @@ LÖVE HTML5/Web Assembly
 [(English README)](README.md)
 
 Emscripten порт фреймворка LÖVE версии 12.0 для запуска приложений в браузере.
-- https://github.com/love2d/love/tree/12.0-development
+- https://github.com/love2d/love/tree/main
 
 Ответвление от love.js:
 - https://github.com/Davidobot/love.js
@@ -54,6 +54,7 @@ build.bat <input> <output>
 Склонируйте и установите [emsdk](https://github.com/emscripten-core/emsdk):
 ```
 git clone https://github.com/emscripten-core/emsdk
+cd emsdk
 
 emsdk install 3.1.47
 emsdk activate 3.1.47
