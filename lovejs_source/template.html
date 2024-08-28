@@ -2,48 +2,69 @@
 <html lang="en-us">
     <head>
         <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, minimum-scale=1, maximum-scale=1">
+        <meta name="mobile-web-app-capable" content="yes">
+
         <title>{{{ TITLE }}}</title>
 
         <!-- Load custom style sheet -->
         <link rel="stylesheet" type="text/css" href="theme/love.css">
     </head>
     <body>
-        <div id="container" class="love-desktop">
-            <canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+        <div id="container" class="love-desktop-frame">
+            <canvas id="canvas" width="{{{ WIDTH }}}" height="{{{ HEIGHT }}}" tabindex="-1"></canvas>
             <div id='message-container'>
-                <div id='message'>Message</div>
+                <div id='message'></div>
                 <div id='progress-border'><div id='progress-bar'></div></div>
-            </div>
-            <div id="footer">
-                <div id="logo">Powered by <a href="https://github.com/love2d/love">LÖVE</a></div>
-                <div id="fullscreen-button" onclick="goFullScreen();">Fullscreen</div>
             </div>
         </div>
 
+        <!-- LÖVE -->
         <script type='text/javascript'>
             var container = document.querySelector("#container");
-            var canvas = document.querySelector("#canvas");
-            var footer = document.querySelector("#footer");
+            var canvas = document.getElementById("canvas");
             var progress_bar = document.querySelector("#progress-bar");
 
             var complete = false;
 
-            function goFullScreen() {
-                if(canvas.requestFullScreen)
-                    canvas.requestFullScreen();
-                else if(canvas.webkitRequestFullScreen)
-                    canvas.webkitRequestFullScreen();
-                else if(canvas.mozRequestFullScreen)
-                    canvas.mozRequestFullScreen();
+            var Module;
+
+            function setFocus() {
+                window.focus();
+                canvas.focus();
             }
 
-            // function FullScreenHook() {
-            //     var canvas = document.getElementById("canvas");
-            //     canvas.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-            //     canvas.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-            // }
+            document.addEventListener('contextmenu', event => event.preventDefault());
+
+            canvas.addEventListener("touchstart", () => {
+                window.focus();
+            });
+            canvas.addEventListener("pointerdown", () => {
+                window.focus();
+            });
+
+            // window.addEventListener('pointerdown', () => {
+            //     setFocus();
+            // });
+            // window.addEventListener('touchstart', () => {
+            //     setFocus();
+            // });
+
+            document.addEventListener("pointerdown", () => {
+                container.focus();
+                setFocus();
+            });
+
+            for (const key of [
+                "fullscreenchange", "mozfullscreenchange", "webkitfullscreenchange", "msfullscreenchange"]) {
+                    if (key in document) {
+                        document.addEventListener(key, function(params) {
+                            setFocus();
+                        })
+                    }
+            }
 
             function drawMessage(text) {
                 message.innerHTML = text;
@@ -54,86 +75,32 @@
                 if (current_value && total_value) {
                     ratio = current_value / total_value;
                 }
-                if (ratio >= 1) {
+                if (ratio >= 1 || text == 'Running...') {
                     complete = true;
+                    ratio = 1;
                 }
 
                 progress_bar.style.width = (ratio * 100) + '%';
                 drawMessage(text);
             }
 
-            window.onload = function () { 
-                window.focus();
-            };
-            window.onclick = function () { 
-                window.focus();
-            };
-
-            window.onerror = function(event) {
+            function onException(exception_message) {
                 canvas.remove();
-                // TODO: do not warn on ok events like simulating an infinite loop or exitStatus
+                console.log(exception_message);
+                alert('An error has occurred:\n' + exception_message + '\n\nSee JavaScript console.')
+                
                 drawMessage('An error has occurred, see JavaScript console');
                 Module.setStatus = function(text) {
                     if (text) Module.printErr('[post-exception status] ' + text);
                 };
-            };
-
-            window.addEventListener("keydown", function(e) {
-                // space and arrow keys
-                if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
-                    e.preventDefault();
-                }
-            }, false);
-
-            if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-                footer.className = "love-mobile";
-                container.className = "love-mobile";
-
-                function resize_canvas() {
-                    var innerWidth = window.innerWidth;
-		            var innerHeight = window.innerHeight;
-
-                    var width = canvas.width;
-                    var height = canvas.height;
-                    var targetRatio = width / height;
-                    var actualRatio = innerWidth / innerHeight;
-
-                    var margin_left = "0px";
-                    var margin_top = "0px";
-                
-                    if (innerWidth < width || innerHeight < height) {
-                        if (actualRatio > targetRatio) {
-                            width = innerHeight * targetRatio;
-                            height = innerHeight;
-                            margin_left = ((innerWidth - width) / 2) + "px";
-                        }
-                        else {
-                            width = innerWidth;
-                            height = innerWidth / targetRatio;
-                            margin_top = ((innerHeight - height) / 2) + "px";
-                        }
-                    }
-                    else {
-                        margin_left = ((innerWidth - width) / 2) + "px";
-                        margin_top = ((innerHeight - height) / 2) + "px";
-                    }
-
-                    canvas.style.width = width + "px";
-                    canvas.style.height = height + "px";
-
-                    container.style.width = width + "px";
-		            container.style.height = height + "px";
-                    container.style.marginLeft = margin_left;
-                    container.style.marginTop = margin_top;
-                }
-
-                resize_canvas();
-                window.addEventListener('resize', resize_canvas, false);
-                window.addEventListener('orientationchange', resize_canvas, false);
-                window.addEventListener('focus', resize_canvas, false);
             }
+
+            window.onerror = function(message) {
+                onException(message);
+            };
         </script>
+
         <script type="text/javascript" src="game.js"></script>
-        <script async type="text/javascript" src="love.js" onload="applicationLoad(this)"></script>
+        <script type="text/javascript" src="love.js" onload="applicationLoad(this);"></script>
     </body>
 </html>

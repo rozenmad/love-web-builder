@@ -1,11 +1,26 @@
-* { box-sizing: border-box; }
+html {
+    box-sizing: border-box;
+}
+*, *:before, *:after {
+    box-sizing: inherit;
+}
 
-body {
-    margin: 0;
+html, body {
+    font-family: arial;
     padding: 0;
-   	font-family: arial;
+    margin: 0;
+
     color: #ea316e;
-  	background-color: #ffffff;
+    background-color: #ffffff;
+    overflow: hidden;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    height: 100%;
 }
 
 a {
@@ -15,38 +30,40 @@ a {
 a:link, a:visited, a:active {
     color: #ea316e;
 }
-
 a:hover {
 	color: #25aae1;
 }
-          
-#container.love-desktop {
+
+.love-desktop-frame {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    overflow: hidden;
+}
+
+.love-desktop-frame:-webkit-full-screen {
+    /* Auto width and height in Safari/Chrome fullscreen. */
+    width: auto;
+    height: auto;
+}
+
+#canvas {
+    outline: none;
+    vertical-align: bottom;
+    border: 0;
+    position: fixed;
+    background-color: #f8f8f8;
+    width: 100%;
+    height: 100%;
+}
+
+#message-container {
+	text-align:center;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
-}
-
-#container.love-mobile {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-}
-
-#canvas {
-    border: 0px none;
-    display: block;
-    background-color: #f8f8f8;
-}
-
-/* .love-mobile #canvas { 
-    width: 100%;
-    height: 100%;
-} */
-
-#message-container {
-    width: 100%;
-	text-align:center;
+    width: 90%;
 }
 
 #progress-border {
@@ -55,31 +72,10 @@ a:hover {
   
 #progress-bar {
 	background-color: #ea316e;
-  	width: 10%;
+  	width: 0%;
    	height: 16px;
 }
 
 #message-container > div {
   	background-color:transparent;
-}
-
-#footer {
-	width:100%;
-    position: relative;
-}
-
-#footer > #fullscreen-button {
-    background-color: transparent;
-    border: 1px solid #ea316e;
-    padding: 5px 32px;
-    font-size: 16px;
-    margin: 4px 0;
-    cursor: pointer;
-  	float: right;
-}
-
-#footer > #logo {
-    float: left;
-    font-size: 16px;
-    margin: 4px 0;
 }

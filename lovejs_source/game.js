@@ -8,37 +8,34 @@ var Module = {
         // application robust, you may want to override this behavior before shipping!
         // See http://www.khronos.org/registry/webgl/specs/latest/1.0/#5.15.2
         canvas.addEventListener("webglcontextlost", function(e) {
-            alert('WebGL context lost. You will need to reload the page.'); 
-            e.preventDefault(); 
+            e.preventDefault();
+            console.log('webglcontextlost');
+            location.reload();
         }, false);
 
         return canvas;
     })(),
+    setFocus: setFocus,
     setStatus: function(text, soFar, total) {
         if (text) {
             drawLoadingStatus(text, soFar, total);
         } else if (Module.remainingDependencies === 0) {
-            var canvas = document.getElementById('canvas');
             document.getElementById('message-container').style.display = 'none';
-            //document.getElementById('progress-border').remove();
-            canvas.style.display = 'block';
-        }
-
-        if (typeof resize_canvas === "function") {
-            resize_canvas();
         }
     },
-    setExceptionMessage: function(exception_message) {
-        console.log(exception_message);
-        alert('An error has occurred:\n' + exception_message + '\n\nSee JavaScript console.')
-
-        document.getElementById('canvas').remove();
-        
-        drawMessage('An error has occurred, see JavaScript console');
-        Module.setStatus = function(text) {
-            if (text) Module.printErr('[post-exception status] ' + text);
-        };
+    onRuntimeInitialized: function() {
+        window.addEventListener('focus', function() {
+            if (typeof Module['_love_setFocus'] === 'function') {
+                Module._love_setFocus(true);
+            }
+        });
+        window.addEventListener('blur', function() {
+            if (typeof Module['_love_setFocus'] === 'function') {
+                Module._love_setFocus(false);
+            }
+        });
     },
+    setExceptionMessage: onException,
     totalDependencies: 0,
     remainingDependencies: 0,
     monitorRunDependencies: function(left) {
@@ -48,7 +45,7 @@ var Module = {
     }
 };
 
-Module.setStatus('Downloading...');
+Module.setStatus('Downloading...')
 
 var applicationLoad = function(e) {
     Love(Module);
