@@ -6,6 +6,10 @@ import argparse
 from uuid import uuid4
 from pathlib import Path
 
+import tempfile
+# Create a temporary directory
+temp_dir = tempfile.mkdtemp()
+
 max_memory = 16777216
 source_dir = 'lovejs_source/'
 lovejs_dir_compat = source_dir + 'compat/'
@@ -61,7 +65,19 @@ def build_webgl_game(gamedir, output_dir):
       if os.path.isfile(gamedir):
             shutil.copyfile(gamedir, output_dir + love_game_name)
       else:
-            shutil.make_archive(output_dir + love_game_name, 'zip', gamedir)
+            # Original: shutil.make_archive(output_dir + love_game_name, 'zip', gamedir)
+            # Revised: make_archive should skip hidden files and directories, like .git, etc. 
+            try:
+                  # Copy all non-hidden files and directories from gamedir to temp_dir
+                  temp_game_dir = os.path.join(temp_dir, 'game')
+                  shutil.copytree(gamedir, temp_game_dir, ignore=shutil.ignore_patterns('.*'))
+
+            # Create the archive from the temporary directory
+                  shutil.make_archive(os.path.join(output_dir, love_game_name), 'zip', temp_game_dir)
+            finally:
+            # Clean up the temporary directory
+                  shutil.rmtree(temp_dir)
+
             p = Path(output_dir + love_game_name + '.zip')
             p.rename(output_dir + love_game_name)
 
