@@ -69,18 +69,11 @@ def build_webgl_game(gamedir, output_dir):
             # Revised: make_archive should skip hidden files and directories, like .git, etc. 
             try:
                   # Copy all non-hidden files and directories from gamedir to temp_dir
-                  for item in os.listdir(gamedir):
-                        if item.startswith('.'):
-                              continue
-                        src_path = os.path.join(gamedir, item)
-                        dest_path = os.path.join(temp_dir, item)
-                        if os.path.isdir(src_path):
-                              shutil.copytree(src_path, dest_path, ignore=shutil.ignore_patterns('.*'))
-                        else:
-                              shutil.copy2(src_path, dest_path)
-                  
+                  temp_game_dir = os.path.join(temp_dir, 'game')
+                  shutil.copytree(gamedir, temp_game_dir, ignore=shutil.ignore_patterns('.*'))
+
             # Create the archive from the temporary directory
-                  shutil.make_archive(os.path.join(output_dir, love_game_name), 'zip', temp_dir)
+                  shutil.make_archive(os.path.join(output_dir, love_game_name), 'zip', temp_game_dir)
             finally:
             # Clean up the temporary directory
                   shutil.rmtree(temp_dir)
