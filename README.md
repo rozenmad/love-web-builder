@@ -1,13 +1,17 @@
-LÖVE HTML5/Web Assembly
+LÖVE HTML5/WebAssembly
 ============
 
 [(Russian README)](readme_RU.md)
 
-Emscripten port of LÖVE framework version 12.0 for distribution your games on the web.
-- https://github.com/love2d/love/tree/main
+An Emscripten port of the LÖVE 12.0 framework for running games and applications in the browser.
 
-Forked from love.js:
-- https://github.com/Davidobot/love.js
+The current build is based on [commit `cdf68b3`](https://github.com/love2d/love/tree/cdf68b3228f3092cdb5425cb6d7555e3ea52ee8e) (from the [`main`](https://github.com/love2d/love/tree/main) branch),
+using an **experimental SDL3 port for Emscripten.**
+
+If you need the previous stable build, please use the [`stable`](https://github.com/rozenmad/love-web-builder/tree/stable) branch.
+
+Forked from love.js:  
+- https://github.com/Davidobot/love.js  
 - https://github.com/TannerRogalsky/love.js
 
 ## Getting Started
@@ -39,9 +43,9 @@ Once the process is complete, it will display 'Done!'
 2. Open ```localhost:8080``` in any web browser.
 
 ## Notes
-1. The Joystick module is completely disabled in the current version. Avoid using this module in your project, as it will lead to errors.
-2. OpenGL ES 3 shaders are supported.
-3. Also check out the notes here: https://github.com/Davidobot/love.js
+1. OpenGL ES 3 shaders are supported.
+2. Also check out the notes here: https://github.com/Davidobot/love.js
+3. Using an **experimental SDL3 port for Emscripten.**
 
 ## Building LÖVE from Source
 
@@ -55,8 +59,8 @@ Clone and install [emsdk](https://github.com/emscripten-core/emsdk)
 git clone https://github.com/emscripten-core/emsdk
 cd emsdk
 
-emsdk install 3.1.47
-emsdk activate 3.1.47
+emsdk install 4.0.10
+emsdk activate 4.0.10
 ```
 
 Modify the paths to emsdk in the build_lovejs.bat file to the correct ones.

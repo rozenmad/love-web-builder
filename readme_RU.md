@@ -1,10 +1,14 @@
-LÖVE HTML5/Web Assembly
+LÖVE HTML5/WebAssembly
 ============
 
 [(English README)](README.md)
 
-Emscripten порт фреймворка LÖVE версии 12.0 для запуска приложений в браузере.
-- https://github.com/love2d/love/tree/main
+Emscripten порт фреймворка LÖVE версии 12.0 для запуска игр и приложений в браузере.
+
+Текущая сборка выполнена на основе [коммита `cdf68b3`](https://github.com/love2d/love/tree/cdf68b3228f3092cdb5425cb6d7555e3ea52ee8e) (ветка [`main`](https://github.com/love2d/love/tree/main)),
+используется **экспериментальный порт SDL3 для Emscripten**.
+
+Если вам нужна предыдущая стабильная сборка, используйте ветку [`stable`](https://github.com/rozenmad/love-web-builder/tree/stable).
 
 Ответвление от love.js:
 - https://github.com/Davidobot/love.js
@@ -40,9 +44,9 @@ build.bat <input> <output>
 2. Откройте `localhost:8080` в любом браузере.
 
 ## Заметки
-1. В текущей версии полностью отключен модуль Joystick. Поэтому избегайте вызова этого модуля в проекте, так как это приведет к ошибкам.
-2. Поддерживаются шейдеры OpenGL ES 3.
-3. Ознакомтесь также с заметками: https://github.com/Davidobot/love.js
+1. Поддерживаются шейдеры OpenGL ES 3.
+2. Ознакомтесь также с заметками: https://github.com/Davidobot/love.js
+3. Используется **экспериментальный порт SDL3 для Emscripten**.
 
 ## Сборка из исходников LÖVE
 
@@ -56,8 +60,8 @@ build.bat <input> <output>
 git clone https://github.com/emscripten-core/emsdk
 cd emsdk
 
-emsdk install 3.1.47
-emsdk activate 3.1.47
+emsdk install 4.0.10
+emsdk activate 4.0.10
 ```
 
 Склонируйте исходники [megasource-web](https://github.com/rozenmad/megasource-web) и [love-web](https://github.com/rozenmad/love-web):
